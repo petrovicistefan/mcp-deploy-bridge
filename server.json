@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.petrovicistefan/mcp-deploy-bridge",
+  "title": "MCP Deploy Bridge",
+  "description": "One MCP server for list/get/logs/redeploy/rollback across hosting platforms.",
+  "websiteUrl": "https://github.com/petrovicistefan/mcp-deploy-bridge#readme",
+  "repository": {
+    "url": "https://github.com/petrovicistefan/mcp-deploy-bridge",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "mcp-deploy-bridge",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
