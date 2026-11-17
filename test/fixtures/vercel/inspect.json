@@ -1,0 +1,16 @@
+{
+  "id": "dpl_example_ready",
+  "name": "example-app",
+  "url": "example-app-ready.vercel.app",
+  "target": "production",
+  "readyState": "READY",
+  "createdAt": 1700000000000,
+  "aliases": ["example-app.vercel.app"],
+  "builds": [
+    {
+      "id": "bld_example",
+      "readyState": "READY"
+    }
+  ],
+  "contextName": "example-team"
+}

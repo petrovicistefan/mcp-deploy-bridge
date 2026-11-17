@@ -1,0 +1,49 @@
+{
+  "contextName": "example-team",
+  "deployments": [
+    {
+      "id": "dpl_example_ready",
+      "url": "example-app-ready.vercel.app",
+      "name": "example-app",
+      "state": "READY",
+      "target": "production",
+      "createdAt": 1700000000000,
+      "creator": {
+        "uid": "usr_example",
+        "username": "example"
+      },
+      "meta": {
+        "githubCommitSha": "abc123examplecommitsha000000000000000001",
+        "githubCommitMessage": "example commit"
+      }
+    },
+    {
+      "id": "dpl_example_building",
+      "url": "example-app-building.vercel.app",
+      "name": "example-app",
+      "state": "BUILDING",
+      "target": "preview",
+      "createdAt": 1700001000000,
+      "creator": {
+        "uid": "usr_example",
+        "username": "example"
+      },
+      "meta": {
+        "githubCommitSha": "def456examplecommitsha000000000000000002"
+      }
+    },
+    {
+      "id": "dpl_example_weird",
+      "url": "example-app-weird.vercel.app",
+      "name": "example-app",
+      "state": "BLOCKED",
+      "target": "preview",
+      "createdAt": 1700002000000,
+      "meta": {}
+    }
+  ],
+  "pagination": {
+    "count": 3,
+    "next": null
+  }
+}

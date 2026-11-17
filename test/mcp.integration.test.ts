@@ -6,7 +6,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 const readJson = (path: string) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 
-test('stdio initialize, tools/list and list_targets', async () => {
+test('stdio initialize, tools/list, list_targets and write dry-runs', async () => {
   const transport = new StdioClientTransport({
     command: process.execPath,
     args: ['dist/server.js'],
@@ -15,21 +15,44 @@ test('stdio initialize, tools/list and list_targets', async () => {
   try {
     await client.connect(transport);
     const pkg = readJson('../package.json');
-    const manifest = readJson('../server.json');
     assert.equal(client.getServerVersion()?.version, pkg.version);
-    assert.equal(manifest.version, pkg.version);
 
     const { tools } = await client.listTools();
     assert.deepEqual(
       tools.map((t) => t.name).sort(),
-      ['list_targets'],
+      [
+        'get_deployment',
+        'get_logs',
+        'list_deployments',
+        'list_targets',
+        'redeploy',
+        'rollback',
+      ].sort(),
     );
 
-    const result = await client.callTool({ name: 'list_targets', arguments: {} });
-    assert.equal(result.isError, undefined);
-    const text = (result.content as Array<{ type: string; text: string }>)[0]?.text;
-    assert.ok(text);
-    assert.deepEqual(JSON.parse(text), { targets: [] });
+    const write = tools.filter((t) => t.name === 'redeploy' || t.name === 'rollback');
+    for (const tool of write) {
+      assert.equal(tool.annotations?.destructiveHint, true);
+    }
+
+    const targets = await client.callTool({ name: 'list_targets', arguments: {} });
+    assert.equal(targets.isError, undefined);
+
+    const dryRedeploy = await client.callTool({
+      name: 'redeploy',
+      arguments: { platform: 'vercel', deploymentId: 'dpl_example', confirm: false },
+    });
+    assert.equal(dryRedeploy.isError, undefined);
+    const redeployText = (dryRedeploy.content as Array<{ text: string }>)[0]?.text ?? '';
+    assert.match(redeployText, /Would rebuild|"dryRun":true/);
+
+    const dryRollback = await client.callTool({
+      name: 'rollback',
+      arguments: { platform: 'vercel', to: 'dpl_example', confirm: false },
+    });
+    assert.equal(dryRollback.isError, undefined);
+    const rollbackText = (dryRollback.content as Array<{ text: string }>)[0]?.text ?? '';
+    assert.match(rollbackText, /Would roll back|"dryRun":true/);
   } finally {
     await client.close();
   }

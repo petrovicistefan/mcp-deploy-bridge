@@ -235,11 +235,17 @@ for (const match of serverText.matchAll(/registerTool\(\s*['"]([^'"]+)['"]/g)) {
   if (CONFIG.writeTools.includes(match[1])) registeredWriteTools.push(match[1]);
 }
 for (const tool of registeredWriteTools) {
-  const window = [...serverText.matchAll(new RegExp(`registerTool\\(\\s*['"]${tool}['"]([\\s\\S]{0,3000})`))][0]?.[1] ?? '';
+  const window =
+    [...serverText.matchAll(new RegExp(`registerTool\\(\\s*['"]${tool}['"]([\\s\\S]{0,3000})`, 'g'))][0]?.[1] ??
+    '';
   if (!/confirm\s*:/.test(window)) {
     fail('confirm-gate', `write tool "${tool}" must declare a confirm input`);
   }
-  if (!/destructiveHint\s*:\s*true/.test(window)) {
+  const hasInlineDestructive = /destructiveHint\s*:\s*true/.test(window);
+  const usesWriteAnnotations =
+    /annotations\s*:\s*writeAnnotations/.test(window) &&
+    /writeAnnotations[\s\S]*?destructiveHint\s*:\s*true/.test(serverText);
+  if (!hasInlineDestructive && !usesWriteAnnotations) {
     fail('confirm-gate', `write tool "${tool}" must set destructiveHint: true`);
   }
   const relatedTests = tests.filter(

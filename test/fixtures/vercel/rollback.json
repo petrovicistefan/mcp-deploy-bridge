@@ -1,0 +1,9 @@
+{
+  "id": "dpl_example_ready",
+  "url": "example-app-ready.vercel.app",
+  "readyState": "READY",
+  "target": "production",
+  "createdAt": 1700000000000,
+  "name": "example-app",
+  "status": "success"
+}

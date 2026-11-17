@@ -1,0 +1,8 @@
+{
+  "id": "dpl_example_redeployed",
+  "url": "example-app-redeployed.vercel.app",
+  "readyState": "BUILDING",
+  "target": "production",
+  "createdAt": 1700003000000,
+  "name": "example-app"
+}
