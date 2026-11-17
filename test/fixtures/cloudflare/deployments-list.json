@@ -1,0 +1,35 @@
+[
+  {
+    "id": "dep_example_older",
+    "created_on": "2024-01-01T00:00:00.000000Z",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "example@example.com",
+    "annotations": {
+      "workers/triggered_by": "upload"
+    },
+    "versions": [
+      {
+        "percentage": 100,
+        "version_id": "10000000-0000-0000-0000-000000000001"
+      }
+    ]
+  },
+  {
+    "id": "dep_example_current",
+    "created_on": "2024-02-01T00:00:00.000000Z",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "example@example.com",
+    "annotations": {
+      "workers/message": "example deploy",
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "percentage": 100,
+        "version_id": "20000000-0000-0000-0000-000000000002"
+      }
+    ]
+  }
+]

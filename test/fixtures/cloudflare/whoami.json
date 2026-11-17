@@ -1,0 +1,11 @@
+{
+  "loggedIn": true,
+  "authType": "OAuth Token",
+  "email": "example@example.com",
+  "accounts": [
+    {
+      "id": "acct_example",
+      "name": "Example Account"
+    }
+  ]
+}

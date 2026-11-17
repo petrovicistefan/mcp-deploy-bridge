@@ -2,6 +2,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
+import { cloudflareAdapter } from './adapters/cloudflare/index.js';
 import { registerAdapter, listAdapters } from './adapters/registry.js';
 import { vercelAdapter } from './adapters/vercel/index.js';
 import { UnsupportedError } from './errors.js';
@@ -10,6 +11,7 @@ import type { Platform } from './types.js';
 import { VERSION } from './version.js';
 
 registerAdapter(vercelAdapter);
+registerAdapter(cloudflareAdapter);
 
 const readAnnotations = {
   readOnlyHint: true,
@@ -161,7 +163,7 @@ export function createServer() {
     'redeploy',
     {
       description:
-        'Rebuild and deploy a previous deployment. Requires confirm:true; otherwise returns a dry-run description. On Vercel this runs `vercel redeploy`.',
+        'Rebuild and deploy a previous deployment. Requires confirm:true; otherwise returns a dry-run description. Vercel: `vercel redeploy`. Cloudflare: unsupported.',
       inputSchema: {
         platform: platformSchema,
         project: z.string().min(1).max(256).optional(),
@@ -191,7 +193,7 @@ export function createServer() {
     'rollback',
     {
       description:
-        'Roll back to a named previous deployment. Requires confirm:true; otherwise returns a dry-run description. On Vercel this promotes via `vercel rollback`.',
+        'Roll back to a named previous deployment/version. Requires confirm:true; otherwise returns a dry-run description. Vercel: promotes via `vercel rollback`. Cloudflare: publishes a Worker version via `wrangler rollback`.',
       inputSchema: {
         platform: platformSchema,
         project: z.string().min(1).max(256).optional(),

@@ -36,7 +36,7 @@ Developers and small teams running apps on more than one platform, who drive dep
 
 ## Platforms
 
-v0.1: Vercel (implemented) and Cloudflare Workers (next). Next after that: Fly.io, Railway. Each platform adapter states which tools it supports; unsupported tools return a clear error, never a silent no-op.
+v0.1: Vercel and Cloudflare Workers (both implemented). Cloudflare does not support `redeploy` (typed `unsupported` error). Next: Fly.io, Railway. Each platform adapter states which tools it supports; unsupported tools return a clear error, never a silent no-op.
 
 ## Pricing
 

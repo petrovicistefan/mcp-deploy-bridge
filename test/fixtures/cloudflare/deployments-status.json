@@ -1,0 +1,13 @@
+{
+  "id": "dep_example_current",
+  "created_on": "2024-02-01T00:00:00.000000Z",
+  "source": "wrangler",
+  "strategy": "percentage",
+  "author_email": "example@example.com",
+  "versions": [
+    {
+      "percentage": 100,
+      "version_id": "20000000-0000-0000-0000-000000000002"
+    }
+  ]
+}

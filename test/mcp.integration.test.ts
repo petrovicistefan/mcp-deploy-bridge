@@ -46,6 +46,13 @@ test('stdio initialize, tools/list, list_targets and write dry-runs', async () =
     const redeployText = (dryRedeploy.content as Array<{ text: string }>)[0]?.text ?? '';
     assert.match(redeployText, /Would rebuild|"dryRun":true/);
 
+    const cfRedeploy = await client.callTool({
+      name: 'redeploy',
+      arguments: { platform: 'cloudflare', confirm: true },
+    });
+    assert.equal(cfRedeploy.isError, true);
+    assert.match((cfRedeploy.content as Array<{ text: string }>)[0]?.text ?? '', /cloudflare/i);
+
     const dryRollback = await client.callTool({
       name: 'rollback',
       arguments: { platform: 'vercel', to: 'dpl_example', confirm: false },
@@ -53,6 +60,20 @@ test('stdio initialize, tools/list, list_targets and write dry-runs', async () =
     assert.equal(dryRollback.isError, undefined);
     const rollbackText = (dryRollback.content as Array<{ text: string }>)[0]?.text ?? '';
     assert.match(rollbackText, /Would roll back|"dryRun":true/);
+
+    const cfDryRollback = await client.callTool({
+      name: 'rollback',
+      arguments: {
+        platform: 'cloudflare',
+        to: '10000000-0000-0000-0000-000000000001',
+        confirm: false,
+      },
+    });
+    assert.equal(cfDryRollback.isError, undefined);
+    assert.match(
+      (cfDryRollback.content as Array<{ text: string }>)[0]?.text ?? '',
+      /Would publish|"dryRun":true/,
+    );
   } finally {
     await client.close();
   }

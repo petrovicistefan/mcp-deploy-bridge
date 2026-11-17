@@ -1,0 +1,2 @@
+{"Outcome":"ok","Exceptions":[],"Logs":[{"Level":"info","Message":["hello from worker"],"TimestampMs":1700000001000},{"Level":"error","Message":["api_key=cf_token_example_SHOULD_REDACT"],"TimestampMs":1700000002000}],"EventTimestampMs":1700000001000,"Event":{"request":{"url":"https://example.workers.dev/","method":"GET"}}}
+{"Outcome":"exception","Exceptions":[{"Name":"Error","Message":"boom"}],"Logs":[],"EventTimestampMs":1700000003000,"Event":{"request":{"url":"https://example.workers.dev/fail","method":"GET"}}}

@@ -1,0 +1,15 @@
+{
+  "id": "20000000-0000-0000-0000-000000000002",
+  "number": 2,
+  "metadata": {
+    "created_on": "2024-02-01T00:00:00.000000Z",
+    "source": "wrangler"
+  },
+  "annotations": {
+    "workers/message": "example deploy",
+    "workers/tag": "example-tag"
+  },
+  "resources": {
+    "bindings": []
+  }
+}
