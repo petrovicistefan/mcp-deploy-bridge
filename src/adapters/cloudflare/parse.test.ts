@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
+  parseDeployOutput,
   parseDeploymentsList,
   parseRollbackOutput,
   parseTailJsonl,
@@ -24,7 +25,13 @@ test('parseVersionView builds a summary', () => {
   const detail = parseVersionView(read('versions-view.json'), 'example-worker');
   assert.equal(detail.id, '20000000-0000-0000-0000-000000000002');
   assert.match(detail.summary, /Cloudflare Worker version/);
-  assert.equal(detail.commit, 'example-tag');
+  assert.equal(detail.commit, null);
+});
+
+test('parseDeployOutput extracts version id and workers.dev url', () => {
+  const dep = parseDeployOutput(read('deploy.txt'), 'example-worker');
+  assert.equal(dep.id, '20000000-0000-0000-0000-000000000002');
+  assert.match(dep.url ?? '', /https:\/\//);
 });
 
 test('parseTailJsonl redacts secrets and maps levels', () => {

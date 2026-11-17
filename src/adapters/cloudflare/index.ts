@@ -2,7 +2,6 @@ import { access, readFile } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
 import { CliError, parseJsonOutput, runCli, type CliRunnerOptions } from '../../cli-runner.js';
-import { UnsupportedError } from '../../errors.js';
 import { redactDeep } from '../../redact.js';
 import type {
   Deployment,
@@ -20,6 +19,7 @@ import type {
 import { ensureSupported } from '../ensure.js';
 import type { Adapter } from '../types.js';
 import {
+  parseDeployOutput,
   parseDeploymentsList,
   parseRollbackOutput,
   parseTailJsonl,
@@ -34,6 +34,7 @@ const CAPABILITIES = [
   'list_deployments',
   'get_deployment',
   'get_logs',
+  'redeploy',
   'rollback',
 ] as const satisfies readonly ToolName[];
 
@@ -152,8 +153,28 @@ export function createCloudflareAdapter(options: CloudflareAdapterOptions = {}):
       }
     },
 
-    async redeploy(_input: RedeployInput): Promise<WriteResult> {
-      throw new UnsupportedError('cloudflare', 'redeploy');
+    async redeploy(input: RedeployInput): Promise<WriteResult> {
+      ensureSupported(adapter, 'redeploy');
+      if (!input.confirm) {
+        return {
+          dryRun: true,
+          action:
+            'Would upload a new Worker version from the local project via `wrangler deploy` ' +
+            '(rebuilds from source in cwd; not a republish of a previous version id). No change made.',
+          deployment: null,
+        };
+      }
+      const args = ['deploy'];
+      if (input.project) args.push('--name', input.project);
+      const result = await wrangler(args, { cwd: input.cwd, timeoutMs: 180_000 });
+      const deployment = parseDeployOutput(result.stdout, input.project ?? null);
+      return {
+        dryRun: false,
+        action:
+          `Uploaded a new Worker version ${deployment.id} from local source via wrangler deploy ` +
+          '(new build + publish; not a rollback to a previous version).',
+        deployment,
+      };
     },
 
     async rollback(input: RollbackInput): Promise<WriteResult> {

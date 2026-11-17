@@ -1,0 +1,5 @@
+Total Upload: 0.17 KiB / gzip: 0.15 KiB
+Uploaded example-worker (5.44 sec)
+Deployed example-worker triggers (1.88 sec)
+  https://example-worker.example.workers.dev
+Current Version ID: 20000000-0000-0000-0000-000000000002

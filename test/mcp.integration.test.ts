@@ -48,10 +48,13 @@ test('stdio initialize, tools/list, list_targets and write dry-runs', async () =
 
     const cfRedeploy = await client.callTool({
       name: 'redeploy',
-      arguments: { platform: 'cloudflare', confirm: true },
+      arguments: { platform: 'cloudflare', confirm: false },
     });
-    assert.equal(cfRedeploy.isError, true);
-    assert.match((cfRedeploy.content as Array<{ text: string }>)[0]?.text ?? '', /cloudflare/i);
+    assert.equal(cfRedeploy.isError, undefined);
+    assert.match(
+      (cfRedeploy.content as Array<{ text: string }>)[0]?.text ?? '',
+      /Would upload|"dryRun":true/,
+    );
 
     const dryRollback = await client.callTool({
       name: 'rollback',

@@ -163,7 +163,7 @@ export function createServer() {
     'redeploy',
     {
       description:
-        'Rebuild and deploy a previous deployment. Requires confirm:true; otherwise returns a dry-run description. Vercel: `vercel redeploy`. Cloudflare: unsupported.',
+        'Redeploy. Requires confirm:true; otherwise returns a dry-run description. Vercel: `vercel redeploy` (rebuild prior deployment). Cloudflare: `wrangler deploy` (new version from local source).',
       inputSchema: {
         platform: platformSchema,
         project: z.string().min(1).max(256).optional(),

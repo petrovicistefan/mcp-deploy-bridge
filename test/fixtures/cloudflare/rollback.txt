@@ -1,2 +1,3 @@
-Successfully rolled back to Version ID: 10000000-0000-0000-0000-000000000001
+Performing rollback...
+╰  SUCCESS  Worker Version 10000000-0000-0000-0000-000000000001 has been deployed to 100% of traffic.
 Current Version ID: 10000000-0000-0000-0000-000000000001

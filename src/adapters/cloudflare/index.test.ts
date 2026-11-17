@@ -4,7 +4,6 @@ import { mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
-import { UnsupportedError } from '../../errors.ts';
 import type { CliResult } from '../../cli-runner.ts';
 import { CliError } from '../../cli-runner.ts';
 import { createCloudflareAdapter } from './index.ts';
@@ -12,27 +11,12 @@ import { createCloudflareAdapter } from './index.ts';
 const fixture = (name: string) =>
   readFileSync(new URL(`../../../test/fixtures/cloudflare/${name}`, import.meta.url), 'utf8');
 
-test('cloudflare capabilities exclude redeploy', () => {
+test('cloudflare capabilities include redeploy and rollback', () => {
   const adapter = createCloudflareAdapter({
     runCli: async () => ({ stdout: '[]', stderr: '', code: 0 }),
   });
-  assert.ok(!adapter.capabilities.includes('redeploy'));
+  assert.ok(adapter.capabilities.includes('redeploy'));
   assert.ok(adapter.capabilities.includes('rollback'));
-});
-
-test('redeploy throws UnsupportedError naming cloudflare', async () => {
-  const adapter = createCloudflareAdapter({
-    runCli: async () => ({ stdout: '', stderr: '', code: 0 }),
-  });
-  await assert.rejects(
-    () => adapter.redeploy({ confirm: true }),
-    (err: unknown) => {
-      assert.ok(err instanceof UnsupportedError);
-      assert.equal(err.platform, 'cloudflare');
-      assert.equal(err.tool, 'redeploy');
-      return true;
-    },
-  );
 });
 
 test('list_targets reads wrangler.toml without leaking account details', async () => {
@@ -55,7 +39,7 @@ test('list_targets reads wrangler.toml without leaking account details', async (
   assert.doesNotMatch(JSON.stringify(targets), /petrovici|@gmail\.com|9e447dea/i);
 });
 
-test('list/get/logs/rollback use fixtures; tail timeout still parses stdout', async () => {
+test('list/get/logs/redeploy/rollback use fixtures; tail timeout still parses stdout', async () => {
   const adapter = createCloudflareAdapter({
     tailTimeoutMs: 50,
     runCli: async (_cmd, args): Promise<CliResult> => {
@@ -67,6 +51,9 @@ test('list/get/logs/rollback use fixtures; tail timeout still parses stdout', as
       }
       if (args[0] === 'tail') {
         throw new CliError('timeout', 'timeout', null, fixture('tail.jsonl'), '');
+      }
+      if (args[0] === 'deploy') {
+        return { stdout: fixture('deploy.txt'), stderr: '', code: 0 };
       }
       if (args[0] === 'rollback') {
         return { stdout: fixture('rollback.txt'), stderr: '', code: 0 };
@@ -86,6 +73,15 @@ test('list/get/logs/rollback use fixtures; tail timeout still parses stdout', as
 
   const logs = await adapter.getLogs({ project: 'example-worker' });
   assert.ok(logs.some((l) => l.message.includes('[REDACTED]')));
+
+  const dryRedeploy = await adapter.redeploy({ confirm: false, project: 'example-worker' });
+  assert.equal(dryRedeploy.dryRun, true);
+  assert.match(dryRedeploy.action, /Would upload/);
+
+  const liveRedeploy = await adapter.redeploy({ confirm: true, project: 'example-worker' });
+  assert.equal(liveRedeploy.dryRun, false);
+  assert.equal(liveRedeploy.deployment?.id, '20000000-0000-0000-0000-000000000002');
+  assert.match(liveRedeploy.action, /wrangler deploy/);
 
   const dry = await adapter.rollback({ confirm: false, to: '10000000-0000-0000-0000-000000000001' });
   assert.equal(dry.dryRun, true);

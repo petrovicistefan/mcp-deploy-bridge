@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Cloudflare `redeploy` via `wrangler deploy`; fixtures refreshed from a deleted throwaway Worker (scrubbed).
 - Safety: stronger `redact` for env values/connection strings, confirm-gate regression tests for both adapters, `check:rules` requires adapter redact imports, ADR-005.
 - Cloudflare Workers adapter (Wrangler 4.164.0): deployments list, versions view, bounded `tail`, rollback; `redeploy` returns typed unsupported; scrubbed fixtures.
 - Vercel adapter (CLI 65.17.0): list/get deployments, logs, redeploy, rollback with confirm dry-run; scrubbed fixtures; `redact` on CLI-derived strings.

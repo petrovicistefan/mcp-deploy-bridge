@@ -141,6 +141,21 @@ export function parseRollbackOutput(stdout: string, versionId: string): Deployme
   });
 }
 
+/** Parse `wrangler deploy` text output (no --json on deploy in 4.164.0). */
+export function parseDeployOutput(stdout: string, project: string | null): Deployment {
+  const version = stdout.match(/Current Version ID:\s*([0-9a-f-]{36})/i)?.[1] ?? '';
+  const urlMatch = stdout.match(/https:\/\/[^\s]+/);
+  return redactDeep({
+    id: version || 'unknown',
+    platform: 'cloudflare' as const,
+    status: 'ready' as const,
+    commit: null,
+    created: new Date().toISOString(),
+    url: urlMatch?.[0] ?? null,
+    project,
+  });
+}
+
 /** Minimal TOML/JSONC name extraction without adding a parser dependency. */
 export function parseWorkerNameFromConfig(text: string, filename: string): string | null {
   if (filename.endsWith('.toml')) {
