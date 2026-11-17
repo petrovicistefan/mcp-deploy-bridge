@@ -1,13 +1,18 @@
 /**
- * Scrub secrets from CLI text before it reaches a tool result.
- * M5 expands patterns; adapters must call this on all CLI-derived strings.
+ * Scrub secrets and environment values from CLI text before tool results.
+ * Adapters must run all CLI-derived strings through `redact` / `redactDeep`.
  */
 const PATTERNS: RegExp[] = [
-  // Common bearer / token shapes
-  /\b(?:vercel_|Bearer\s+)[A-Za-z0-9._\-]{8,}\b/gi,
-  /\b(?:api[_-]?key|token|secret|password)\s*[:=]\s*['"]?[^\s'"]+/gi,
-  // npm / GitHub style tokens
-  /\b(?:ghp_|gho_|github_pat_|npm_)[A-Za-z0-9_]+\b/g,
+  // Explicit secret assignments / headers
+  /\b(?:api[_-]?key|token|secret|password|passwd|authorization|credential)\s*[:=]\s*['"]?[^\s'"]+/gi,
+  /\bBearer\s+[A-Za-z0-9._\-+=\/]{8,}/gi,
+  // Platform / cloud token prefixes
+  /\b(?:vercel_|ghp_|gho_|github_pat_|npm_|cfar_|sk_live_|sk_test_|AKIA)[A-Za-z0-9._\-]*/g,
+  // DB/message URLs, and http(s) URLs that embed user:pass@
+  /\b(?:postgres|postgresql|mysql|mongodb|redis|amqp):\/\/[^\s'"]+/gi,
+  /\bhttps?:\/\/[^/\s'"]+:[^/\s'"]+@[^\s'"]+/gi,
+  // Common env var dumps: NAME=value for sensitive names
+  /\b(?:DATABASE_URL|DIRECT_URL|REDIS_URL|API_KEY|SECRET_KEY|ACCESS_TOKEN|PRIVATE_KEY|CF_API_TOKEN|VERCEL_TOKEN|AWS_SECRET_ACCESS_KEY)\s*=\s*[^\s'"]+/gi,
 ];
 
 export function redact(text: string): string {

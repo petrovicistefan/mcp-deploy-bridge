@@ -275,6 +275,27 @@ for (const dep of Object.keys(pkg.dependencies ?? {})) {
   }
 }
 
+// 11. redaction module exists; every adapter platform entry imports it
+if (!existsSync(join(root, 'src/redact.ts'))) {
+  fail('redact', 'src/redact.ts is missing');
+} else {
+  const redactText = stripComments(readText('src/redact.ts'));
+  if (!/export\s+function\s+redact\b/.test(redactText)) {
+    fail('redact', 'src/redact.ts must export function redact');
+  }
+}
+for (const { file, text } of sources) {
+  if (!file.startsWith('src/adapters/') || !/\/index\.ts$/.test(file)) continue;
+  if (file === 'src/adapters/types.ts' || file.includes('/ensure.ts') || file.includes('/registry.ts')) {
+    continue;
+  }
+  // Platform adapter entrypoints: src/adapters/<platform>/index.ts
+  if (!/^src\/adapters\/[^/]+\/index\.ts$/.test(file)) continue;
+  if (!/from\s+['"].*redact\.(?:js|ts)['"]/.test(stripComments(text))) {
+    fail('redact', `${file} must import redact helpers for CLI output`);
+  }
+}
+
 if (errors.length) {
   console.error(`check:rules failed (${errors.length}):`);
   for (const message of errors) console.error(`  - ${message}`);

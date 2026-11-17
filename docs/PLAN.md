@@ -8,7 +8,7 @@ Scope: Vercel + Cloudflare Workers. See PRODUCT.md for what this is not.
 - [x] 2. **Core** — normalized types (`Deployment`, `LogLine`, `Capability`), adapter interface, CLI runner with timeout and JSON parsing (pure logic + tests with recorded CLI fixtures, no network in tests).
 - [x] 3. **Vercel adapter** — list/get deployments, logs, redeploy, rollback (`vercel rollback`, `vercel promote`).
 - [x] 4. **Cloudflare adapter** — `wrangler deployments list`, `wrangler tail` (bounded window), `wrangler rollback`.
-- [ ] 5. **Safety** — confirm gate + dry-run output, `destructiveHint`, redaction of env values and tokens in any CLI output (tests).
+- [x] 5. **Safety** — confirm gate + dry-run output, `destructiveHint`, redaction of env values and tokens in any CLI output (tests).
 - [ ] 6. **Release prep** — README, server.json, glama.json, demo, add to `mcp-marketplace` pin check. Publishing stays with Stefan.
 
 ## Rules to enforce in `check:rules`

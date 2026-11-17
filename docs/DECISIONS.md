@@ -21,3 +21,9 @@ Consequences: no silent no-ops; agents can check `list_targets` capabilities fir
 ## ADR-004: Same suite conventions
 
 Decision: TypeScript strict, stdio transport, `@modelcontextprotocol/sdk` + `zod`, node:test via tsx, version read from `package.json`, MIT, optional hosted path through `mcp-control-plane` (as in `mcp-database-doctor`).
+
+## ADR-005: Redact CLI output before tool results
+
+Context: platform CLIs may echo tokens, `DATABASE_URL`, or Bearer headers in logs and error text. Returning those to an MCP client would leak secrets into agent context.
+Decision: every adapter runs CLI-derived strings through `src/redact.ts` before building tool results. Write tools still require `confirm: true` and advertise `destructiveHint`.
+Consequences: some benign URLs may be over-redacted; that is preferred to leaking credentials. Patterns are expanded as new leak shapes appear, with regression tests.
