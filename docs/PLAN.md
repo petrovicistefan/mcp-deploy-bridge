@@ -9,7 +9,7 @@ Scope: Vercel + Cloudflare Workers. See PRODUCT.md for what this is not.
 - [x] 3. **Vercel adapter** — list/get deployments, logs, redeploy, rollback (`vercel rollback`, `vercel promote`).
 - [x] 4. **Cloudflare adapter** — `wrangler deployments list`, `wrangler tail` (bounded window), `wrangler rollback`.
 - [x] 5. **Safety** — confirm gate + dry-run output, `destructiveHint`, redaction of env values and tokens in any CLI output (tests).
-- [ ] 6. **Release prep** — README, server.json, glama.json, demo, add to `mcp-marketplace` pin check. Publishing stays with Stefan.
+- [x] 6. **Release prep** — README, server.json, glama.json, demo, add to `mcp-marketplace` pin check. Publishing stays with Stefan.
 
 ## Rules to enforce in `check:rules`
 

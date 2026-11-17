@@ -1,10 +1,10 @@
 # Product: MCP Deploy Bridge
 
-Status: idea, not built. Written 2026-11-18.
+Status: v0.1 implemented locally. npm / MCP Registry / Glama publish stays with Stefan.
 
 ## What it is
 
-One MCP server that gives an AI coding agent the same small set of deploy operations on every hosting platform: list deployments, read status, read logs, redeploy, roll back. It wraps each platform's own CLI or API behind one tool schema, so the agent does not need to know whether the app runs on Vercel, Cloudflare Workers, Fly.io or Railway.
+One MCP server that gives an AI coding agent the same small set of deploy operations on every hosting platform: list deployments, read status, read logs, redeploy, roll back. It wraps each platform's own CLI behind one tool schema, so the agent does not need to know whether the app runs on Vercel or Cloudflare Workers (Fly.io and Railway next).
 
 ## Why
 
@@ -23,7 +23,7 @@ One MCP server that gives an AI coding agent the same small set of deploy operat
 
 Developers and small teams running apps on more than one platform, who drive deploy work through Claude Code, Cursor or another MCP client.
 
-## Tools (v0.1 plan)
+## Tools (v0.1)
 
 | Tool | Kind | Notes |
 |------|------|-------|
@@ -32,7 +32,7 @@ Developers and small teams running apps on more than one platform, who drive dep
 | `get_deployment` | read | Status plus build and runtime summary |
 | `get_logs` | read | Normalized log lines, with time window and level filter |
 | `redeploy` | write | Requires `confirm: true` |
-| `rollback` | write | To a named previous deployment; requires `confirm: true` |
+| `rollback` | write | To a named previous deployment/version; requires `confirm: true` |
 
 ## Platforms
 

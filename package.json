@@ -1,7 +1,7 @@
 {
   "name": "mcp-deploy-bridge",
   "version": "0.1.0",
-  "description": "One MCP server for list/get/logs/redeploy/rollback across hosting platforms",
+  "description": "MCP server for Vercel and Cloudflare: list deployments, logs, redeploy and rollback with confirm gates — one schema for AI coding agents",
   "mcpName": "io.github.petrovicistefan/mcp-deploy-bridge",
   "type": "module",
   "license": "MIT",
@@ -46,12 +46,17 @@
     "mcp",
     "model-context-protocol",
     "deploy",
+    "deployment",
     "vercel",
     "cloudflare",
+    "cloudflare-workers",
+    "wrangler",
     "rollback",
+    "redeploy",
     "mcp-server",
     "ai-agents",
-    "claude",
-    "cursor"
+    "claude-code",
+    "cursor",
+    "devops"
   ]
 }
