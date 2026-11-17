@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { listAdapters } from './adapters/registry.js';
 import { VERSION } from './version.js';
 
 const readAnnotations = {
@@ -20,16 +21,21 @@ function toolResult(output: unknown) {
 export function createServer() {
   const server = new McpServer({ name: 'mcp-deploy-bridge', version: VERSION });
 
-  // Scaffold stub: adapters land in later milestones. Returns an empty target list.
   server.registerTool(
     'list_targets',
     {
       description:
-        'List detected deploy targets per platform from local config and CLI auth. Empty until adapters are wired.',
+        'List detected deploy targets per platform from local config and CLI auth. Capabilities come from each adapter.',
       inputSchema: {},
       annotations: readAnnotations,
     },
-    async () => toolResult({ targets: [] }),
+    async () => {
+      const cwd = process.cwd();
+      const targets = (
+        await Promise.all(listAdapters().map((adapter) => adapter.listTargets(cwd)))
+      ).flat();
+      return toolResult({ targets });
+    },
   );
 
   return server;

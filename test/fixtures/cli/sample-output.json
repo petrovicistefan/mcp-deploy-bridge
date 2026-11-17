@@ -1,0 +1,13 @@
+{
+  "deployments": [
+    {
+      "id": "dpl_example",
+      "url": "https://example.vercel.app",
+      "created": 1700000000000,
+      "state": "READY",
+      "meta": {
+        "githubCommitSha": "abc123example"
+      }
+    }
+  ]
+}

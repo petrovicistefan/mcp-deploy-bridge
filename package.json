@@ -18,8 +18,8 @@
   },
   "scripts": {
     "build": "tsc && node scripts/postbuild.mjs",
-    "test": "node --test 'src/**/*.test.ts'",
-    "test:integration": "node --test test/mcp.integration.test.ts",
+    "test": "tsx --test 'src/**/*.test.ts'",
+    "test:integration": "tsx --test test/mcp.integration.test.ts",
     "check": "tsc --noEmit",
     "check:rules": "node scripts/check-rules.mjs",
     "prepublishOnly": "npm run check && npm run check:rules && npm test && npm run build && npm run test:integration"
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
     "typescript": "^5.9.0"
   },
   "repository": {
